@@ -1,0 +1,44 @@
+Story: File Encryption
+As a user
+In order to protect sensitive data
+I want to encrypt and decrypt files
+
+Scenario: Applying  XOR cipher to file
+When xorCipher is called with input and key
+Then the input is XORed with the key
+
+Scenario: Applying byte reversing to file
+When inverse is called with input
+Then the bits in the input are reversed
+
+Scenario: Batch operation on folder small_data with algorithm XOR-cipher
+When batchFileCipher is called with input folder name small_data and algorithm XOR-cipher
+Then the folder is being opened
+When the next file is being read
+Then the algorithm is being chosen
+And XOR-cipher is being applied
+And the modified data is being saved
+When the next file is being read
+Then the algorithm is being chosen
+And XOR-cipher is being applied
+And the modified data is being saved
+When the next file is being read
+Then the algorithm is being chosen
+And XOR-cipher is being applied
+And the modified data is being saved
+
+Scenario: Batch operation on folder small_data with algorithm inverse-byte
+When batchFileCipher is called with input folder name small_data and algorithm inverse-byte
+Then the folder is being opened
+When the next file is being read
+Then the algorithm is being chosen
+And inverse-cipher is being applied
+And the modified data is being saved
+When the next file is being read
+Then the algorithm is being chosen
+And inverse-cipher is being applied
+And the modified data is being saved
+When the next file is being read
+Then the algorithm is being chosen
+And inverse-cipher is being applied
+And the modified data is being saved
