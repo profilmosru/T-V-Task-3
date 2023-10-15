@@ -12,13 +12,13 @@ public class FileEncryptionSolution {
 
     public static void xorCipher(byte[] input, byte[] key) {
         for (int i = 0; i < input.length; i++) {
-            input[i] = (byte) (input[i] ^ key[i % key.length]);
+            input[i] ^= key[i % key.length];
         }
     }
 
     public static void inverse(byte[] input) {
         for (int i = 0; i < input.length; i++) {
-            input[i] = (byte) (255 - input[i]);
+            input[i] = (byte) ~input[i];
         }
     }
 
@@ -42,7 +42,6 @@ public class FileEncryptionSolution {
                     FileInputStream fis = new FileInputStream(file);
                     byte[] data = new byte[(int) file.length()];
                     fis.read(data);
-                    fis.close();
 
                     if (algorithm.equals("XOR-cipher")) {
                         xorCipher(data, filename.getBytes());
@@ -50,9 +49,7 @@ public class FileEncryptionSolution {
                         inverse(data);
                     }
 
-                    FileOutputStream fos = new FileOutputStream(file);
-                    fos.write(data);
-                    fos.close();
+                    new FileOutputStream(file).write(data);
 
                     //System.out.println("Cipher operation completed for file: " + filename);
                 } catch (IOException e) {
