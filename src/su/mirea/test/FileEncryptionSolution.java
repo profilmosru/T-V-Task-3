@@ -1,6 +1,7 @@
 package su.mirea.test;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,13 +9,58 @@ import java.security.*;
 
 public class FileEncryptionSolution {
 
+
     public static void xorCipher(byte[] input, byte[] key) {
+        for (int i = 0; i < input.length; i++) {
+            input[i] = (byte) (input[i] ^ key[i % key.length]);
+        }
     }
 
     public static void inverse(byte[] input) {
+        for (int i = 0; i < input.length; i++) {
+            input[i] = (byte) (255 - input[i]);
+        }
     }
 
     public static void batchFileCipher(String foldername, String algorithm) {
+        File folder = new File(foldername);
+        if (!folder.exists() || !folder.isDirectory()) {
+            System.out.println("Invalid folder name!");
+            return;
+        }
+
+        File[] files = folder.listFiles();
+        if (files == null || files.length == 0) {
+            System.out.println("No files found in the folder!");
+            return;
+        }
+
+        for (File file : files) {
+            if (file.isFile()) {
+                String filename = file.getName();
+                try {
+                    FileInputStream fis = new FileInputStream(file);
+                    byte[] data = new byte[(int) file.length()];
+                    fis.read(data);
+                    fis.close();
+
+                    if (algorithm.equals("XOR-cipher")) {
+                        xorCipher(data, filename.getBytes());
+                    } else if (algorithm.equals("inverse-byte")) {
+                        inverse(data);
+                    }
+
+                    FileOutputStream fos = new FileOutputStream(file);
+                    fos.write(data);
+                    fos.close();
+
+                    //System.out.println("Cipher operation completed for file: " + filename);
+                } catch (IOException e) {
+                    System.out.println("Failed to process file: " + filename);
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public static void testXORCipher(String filePath) {
@@ -217,7 +263,7 @@ public class FileEncryptionSolution {
         }
         // Print fancy table-style test results
         System.out.println("╔═════════════════════════════════════════════════╗");
-        System.out.println("║               TTD Test Results                  ║");
+        System.out.println("║               TDD Test Results                  ║");
         System.out.println("╠═════════════════════════════════════════════════╣");
         System.out.println("║   Test Name        │     Status                 ║");
         System.out.println("╠═════════════════════════════════════════════════╣");
